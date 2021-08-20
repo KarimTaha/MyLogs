@@ -6,6 +6,7 @@ const styles = StyleSheet.create({
     margin: 16,
     right: 0,
     bottom: 0,
+    backgroundColor: '#191e52',
   },
   container: {
     height: '100%',
