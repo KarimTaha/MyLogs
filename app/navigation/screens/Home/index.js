@@ -4,7 +4,7 @@ import {FAB, Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
 import { useSelector, useDispatch } from 'react-redux';
-import {getLogs} from 'mylogs/app/redux/actions/logsActions';
+import {getLogs, deleteLog} from 'mylogs/app/redux/actions/logsActions';
 
 const HomeScreen = ({navigation}) => {
   
@@ -23,6 +23,7 @@ const HomeScreen = ({navigation}) => {
         }}
         onLongPress={() => {
           console.log(`${item.name} long pressed`);
+          dispatch(deleteLog(item));
         }}
         activeOpacity={0.95}
         style={styles.logCardContainer}>

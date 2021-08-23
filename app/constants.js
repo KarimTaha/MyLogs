@@ -1,3 +1,4 @@
+// Mockdata
 export const LISTS = [
   {
     id: '1',
