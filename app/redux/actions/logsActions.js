@@ -1,8 +1,9 @@
 import {LOGS} from '../constants';
-import { sqliteDatabase } from "../../database/Database";
+import {sqliteDatabase} from '../../database/Database';
 
 const database = sqliteDatabase;
-export const getLogs = () => async (dispatch) => {
+
+export const getLogs = () => async dispatch => {
   console.log('[getLogs Action] start');
   try {
     database.getLogs().then(logs => {
@@ -16,7 +17,7 @@ export const getLogs = () => async (dispatch) => {
   }
 };
 
-export const createLog = (log) => async (dispatch) => {
+export const createLog = log => async dispatch => {
   console.log('[createLog Action] start');
   try {
     database.createLog(log).then(() => {
@@ -27,12 +28,24 @@ export const createLog = (log) => async (dispatch) => {
   }
 };
 
-export const editLog = log => ({
-  type: LOGS.EDIT_LOG,
-  payload: log,
-});
+export const editLog = log => async dispatch => {
+  console.log('[editLog Action] start');
+  try {
+    database.editLog(log).then(() => {
+      dispatch(getLogs());
+    });
+  } catch (error) {
+    console.error('[editLog Action] Error:', error);
+  }
+};
 
-export const deleteLog = log => ({
-  type: LOGS.DELETE_LOG,
-  payload: log,
-});
+export const deleteLog = log => async dispatch => {
+  console.log('[deleteLog Action] start');
+  try {
+    database.deleteLog(log).then(() => {
+      dispatch(getLogs());
+    });
+  } catch (error) {
+    console.error('[deleteLog Action] Error:', error);
+  }
+};
