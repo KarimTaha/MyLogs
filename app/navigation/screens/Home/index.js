@@ -1,11 +1,20 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, Touchable, TouchableOpacity} from 'react-native';
 import {FAB, Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
-import {LISTS} from 'mylogs/app/constants';
+import { useSelector, useDispatch } from 'react-redux';
+import {getLogs} from 'mylogs/app/redux/actions/logsActions';
 
 const HomeScreen = ({navigation}) => {
+  
+  const logs = useSelector(state => state.logs)
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getLogs());
+  }, []);
+
   const renderLogCard = ({item}) => {
     return (
       <TouchableOpacity
@@ -40,14 +49,16 @@ const HomeScreen = ({navigation}) => {
     <View style={styles.container}>
       <Text style={styles.pageTitle}>Logs</Text>
       <FlatList
-        data={LISTS}
+        data={logs.items}
         renderItem={renderLogCard}
         keyExtractor={item => item.id}
         showsVerticalScrollIndicator={false}></FlatList>
       <FAB
         style={styles.fab}
         icon="plus"
-        onPress={() => {navigation.navigate('CreateLog');}}
+        onPress={() => {
+          navigation.navigate('CreateLog');
+        }}
       />
     </View>
   );

@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
     paddingLeft: 13,
     backgroundColor: '#fafbfc',
     borderColor: '#808080',
+    marginBottom: 110,
   },
   typeDropdownText: {
     color: 'grey',

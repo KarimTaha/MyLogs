@@ -4,12 +4,21 @@ import {TextInput, Button, Appbar} from 'react-native-paper';
 import styles from './styles';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {LOG_TYPES} from 'mylogs/app/constants';
+import {useLogs} from 'mylogs/app/hooks/useLogs';
+import {useDispatch} from 'react-redux';
+import {createLog} from 'mylogs/app/redux/actions/logsActions';
 
 const CreateLog = ({navigation}) => {
+  DropDownPicker.setListMode("SCROLLVIEW");
+  const [logName, setLogName] = useState('');
+  const [logcolor, setLogcolor] = useState('');
+  const [logDescription, setLogDescription] = useState('');
   // Log type
-  const [typeOpen, setTypeOpen] = useState(false);
-  const [typeValue, setTypeValue] = useState(null);
-  const [typeItems, setTypeItems] = useState(LOG_TYPES);
+  const [logTypeOpen, setLogTypeOpen] = useState(false);
+  const [logTypeValue, setLogTypeValue] = useState(null);
+  const [logTypeItems, setLogTypeItems] = useState(LOG_TYPES);
+
+  const dispatch = useDispatch();
 
   return (
     <View style={styles.container}>
@@ -27,22 +36,26 @@ const CreateLog = ({navigation}) => {
             style={styles.inputItem}
             label="Name"
             mode="outlined"
-            placeholder="Enter log name"></TextInput>
+            placeholder="Enter log name"
+            value={logName}
+            onChangeText={text => setLogName(text)}></TextInput>
           <TextInput
             style={styles.inputItem}
             label="Description"
             mode="outlined"
-            placeholder="Enter description for log"></TextInput>
+            placeholder="Enter description for log"
+            value={logDescription}
+            onChangeText={text => setLogDescription(text)}></TextInput>
           <DropDownPicker
             textStyle={styles.typeDropdownText}
             placeholder="Select log type"
             style={[styles.inputItem, styles.typeDropdown]}
-            open={typeOpen}
-            value={typeValue}
-            items={typeItems}
-            setOpen={setTypeOpen}
-            setValue={setTypeValue}
-            setItems={setTypeItems}
+            open={logTypeOpen}
+            value={logTypeValue}
+            items={logTypeItems}
+            setOpen={setLogTypeOpen}
+            setValue={setLogTypeValue}
+            setItems={setLogTypeItems}
           />
         </View>
         <View style={styles.buttonsContainer}>
@@ -50,7 +63,22 @@ const CreateLog = ({navigation}) => {
             color="#191e52"
             mode="contained"
             style={styles.button}
-            onPress={() => {}}>
+            onPress={() => {
+              // console.log(`name = ${logName},
+              // description = ${logDescription}`)
+              dispatch(
+                createLog({
+                  name: logName,
+                  description: logDescription,
+                  color: '319e4e',
+                  type: logTypeValue,
+                  reminder: 'Daily',
+                  creation_date: '23/08/2021',
+                }),
+              ).then(()=>{
+                navigation.goBack();
+              });
+            }}>
             Create
           </Button>
         </View>
