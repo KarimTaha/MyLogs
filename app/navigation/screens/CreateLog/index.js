@@ -4,7 +4,6 @@ import {TextInput, Button, Appbar} from 'react-native-paper';
 import styles from './styles';
 import DropDownPicker from 'react-native-dropdown-picker';
 import {LOG_TYPES} from 'mylogs/app/constants';
-import {useLogs} from 'mylogs/app/hooks/useLogs';
 import {useDispatch} from 'react-redux';
 import {createLog} from 'mylogs/app/redux/actions/logsActions';
 

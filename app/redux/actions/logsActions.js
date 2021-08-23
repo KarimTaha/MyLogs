@@ -5,7 +5,7 @@ const database = sqliteDatabase;
 export const getLogs = () => async (dispatch) => {
   console.log('[getLogs Action] start');
   try {
-    database.getAllLogs().then(logs => {
+    database.getLogs().then(logs => {
       dispatch({
         type: LOGS.GET_LOGS,
         payload: logs,
