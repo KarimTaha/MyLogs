@@ -27,6 +27,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     margin: 20,
   },
+  paletteColor: {
+    width: 60,
+    height: 60,
+    borderRadius: 60,
+    margin: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  paletteContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+  },
+  paletteIcon: {
+    color: 'white',
+    fontSize: 25,
+    fontWeight: 'normal'
+  }, 
+  paletteLabel: {
+    fontSize: 16,
+    marginVertical: 10,
+  },
   scrollViewContainer: {
     paddingBottom: 40,
     paddingHorizontal: 20,
@@ -40,7 +62,7 @@ const styles = StyleSheet.create({
     paddingLeft: 13,
     backgroundColor: '#fafbfc',
     borderColor: '#808080',
-    marginBottom: 110,
+    // marginBottom: 110,
   },
   typeDropdownText: {
     color: 'grey',

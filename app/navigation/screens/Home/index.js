@@ -1,14 +1,14 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {View, Text, FlatList, Touchable, TouchableOpacity} from 'react-native';
 import {FAB, Divider} from 'react-native-paper';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './styles';
-import { useSelector, useDispatch } from 'react-redux';
+import {capitalizeFirstLetter} from '../../../utils/common';
+import {useSelector, useDispatch} from 'react-redux';
 import {getLogs, deleteLog} from 'mylogs/app/redux/actions/logsActions';
 
 const HomeScreen = ({navigation}) => {
-  
-  const logs = useSelector(state => state.logs)
+  const logs = useSelector(state => state.logs);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,9 +38,13 @@ const HomeScreen = ({navigation}) => {
           <Divider style={styles.divider} />
           <View style={styles.logCardTextBottom}>
             <Icon name="sliders" style={styles.icon} />
-            <Text style={styles.logCardType}>{item.type}</Text>
+            <Text style={styles.logCardType}>
+              {capitalizeFirstLetter(item.type)}
+            </Text>
             <Icon name="bell" style={styles.icon} />
-            <Text style={styles.logCardReminder}>{item.reminder}</Text>
+            <Text style={styles.logCardReminder}>
+              {capitalizeFirstLetter(item.reminder)}
+            </Text>
           </View>
         </View>
       </TouchableOpacity>

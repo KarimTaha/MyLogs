@@ -1,16 +1,17 @@
 import React, {useState} from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, TouchableOpacity} from 'react-native';
 import {TextInput, Button, Appbar} from 'react-native-paper';
 import styles from './styles';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {LOG_TYPES} from 'mylogs/app/constants';
+import {LOG_TYPES, LOG_COLORS} from 'mylogs/app/constants';
 import {useDispatch} from 'react-redux';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import {createLog} from 'mylogs/app/redux/actions/logsActions';
 
 const CreateLog = ({navigation}) => {
-  DropDownPicker.setListMode("SCROLLVIEW");
+  DropDownPicker.setListMode('SCROLLVIEW');
   const [logName, setLogName] = useState('');
-  const [logcolor, setLogcolor] = useState('');
+  const [logcolor, setLogcolor] = useState('808080');
   const [logDescription, setLogDescription] = useState('');
   // Log type
   const [logTypeOpen, setLogTypeOpen] = useState(false);
@@ -56,6 +57,7 @@ const CreateLog = ({navigation}) => {
             setValue={setLogTypeValue}
             setItems={setLogTypeItems}
           />
+          <ColorPalette selectedColor={logcolor} onColorPressed={setLogcolor} />
         </View>
         <View style={styles.buttonsContainer}>
           <Button
@@ -69,12 +71,12 @@ const CreateLog = ({navigation}) => {
                 createLog({
                   name: logName,
                   description: logDescription,
-                  color: '319e4e',
+                  color: logcolor,
                   type: logTypeValue,
                   reminder: 'Daily',
                   creation_date: '23/08/2021',
                 }),
-              ).then(()=>{
+              ).then(() => {
                 navigation.goBack();
               });
             }}>
@@ -82,6 +84,28 @@ const CreateLog = ({navigation}) => {
           </Button>
         </View>
       </ScrollView>
+    </View>
+  );
+};
+
+const ColorPalette = props => {
+  return (
+    <View>
+      <Text style={styles.paletteLabel}>Color</Text>
+      <View style={styles.paletteContainer}>
+        {LOG_COLORS.map(color => (
+          <TouchableOpacity
+            style={[styles.paletteColor, {backgroundColor: '#' + color.value}]}
+            onPress={() => {
+              props.onColorPressed(color.value);
+            }}
+            disabled={props.selectedColor == color.value}>
+            {props.selectedColor == color.value ? (
+              <Icon name="check" style={styles.paletteIcon} />
+            ) : null}
+          </TouchableOpacity>
+        ))}
+      </View>
     </View>
   );
 };
