@@ -5,6 +5,7 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import HomeScreen from './screens/Home';
 import LogDetails from './screens/LogDetails';
 import CreateLog from './screens/CreateLog';
+import EditLog from './screens/EditLog';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,6 +29,11 @@ const MainStack = _props => {
           <Stack.Screen
             name="CreateLog"
             component={CreateLog}
+            options={{animationTypeForReplace: 'push'}}
+          />
+          <Stack.Screen
+            name="EditLog"
+            component={EditLog}
             options={{animationTypeForReplace: 'push'}}
           />
         </Stack.Navigator>

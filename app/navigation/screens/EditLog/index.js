@@ -6,16 +6,19 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {LOG_TYPES} from 'mylogs/app/constants';
 import {useDispatch} from 'react-redux';
 import ColorPalette from 'mylogs/app/components/ColorPalette';
-import {createLog} from 'mylogs/app/redux/actions/logsActions';
+import {editLog} from 'mylogs/app/redux/actions/logsActions';
 
-const CreateLog = ({navigation}) => {
+const EditLog = ({navigation, route}) => {
+  const originalItem = route.params.item;
   DropDownPicker.setListMode('SCROLLVIEW');
-  const [logName, setLogName] = useState('');
-  const [logcolor, setLogcolor] = useState('808080');
-  const [logDescription, setLogDescription] = useState('');
+  const [logName, setLogName] = useState(originalItem.name);
+  const [logcolor, setLogcolor] = useState(originalItem.color);
+  const [logDescription, setLogDescription] = useState(
+    originalItem.description,
+  );
   // Log type
   const [logTypeOpen, setLogTypeOpen] = useState(false);
-  const [logTypeValue, setLogTypeValue] = useState(null);
+  const [logTypeValue, setLogTypeValue] = useState(originalItem.type);
   const [logTypeItems, setLogTypeItems] = useState(LOG_TYPES);
 
   const dispatch = useDispatch();
@@ -29,7 +32,7 @@ const CreateLog = ({navigation}) => {
           }}
         />
       </Appbar.Header>
-      <Text style={styles.pageTitle}>Create Log</Text>
+      <Text style={styles.pageTitle}>Edit Log</Text>
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View>
           <TextInput
@@ -68,7 +71,8 @@ const CreateLog = ({navigation}) => {
               // console.log(`name = ${logName},
               // description = ${logDescription}`)
               dispatch(
-                createLog({
+                editLog({
+                  id: originalItem.id,
                   name: logName,
                   description: logDescription,
                   color: logcolor,
@@ -82,7 +86,7 @@ const CreateLog = ({navigation}) => {
                 navigation.goBack();
               });
             }}>
-            Create
+            Save
           </Button>
         </View>
       </ScrollView>
@@ -90,4 +94,4 @@ const CreateLog = ({navigation}) => {
   );
 };
 
-export default CreateLog;
+export default EditLog;
