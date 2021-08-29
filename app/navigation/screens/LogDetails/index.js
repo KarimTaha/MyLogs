@@ -43,13 +43,12 @@ const LogDetails = ({navigation, route}) => {
   }, []);
 
   const renderLogEntryItem = ({item, index}) => {
-    console.log(item.creation_date);
     return (
       <TouchableWithoutFeedback
         onPress={() => {
           console.log('Hiiii');
         }}
-        onLongPress={()=>{
+        onLongPress={() => {
           dispatch(deleteLogEntry(item));
         }}>
         <View>
@@ -84,7 +83,6 @@ const LogDetails = ({navigation, route}) => {
   const EntriesTab = () => {
     return (
       <View style={styles.tabContainer}>
-        <Text>Entries Tab</Text>
         <Button
           color="#000000"
           style={styles.addEntryBtn}
@@ -101,6 +99,7 @@ const LogDetails = ({navigation, route}) => {
           Add
         </Button>
         <FlatList
+          style={styles.entriesList}
           data={logEntries.items}
           renderItem={renderLogEntryItem}
           keyExtractor={item => item.id}

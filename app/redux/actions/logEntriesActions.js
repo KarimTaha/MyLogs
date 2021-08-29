@@ -7,10 +7,6 @@ export const getLogEntries = log_id => async dispatch => {
   console.log('[getLogEntries Action] start, log_id = ', log_id);
   try {
     database.getLogEntries(log_id).then(entries => {
-      console.log(
-        '[getLogEntries Action] fetched entries, entries = ',
-        entries,
-      );
       dispatch({
         type: LOG_ENTRIES.GET_LOG_ENTRIES,
         payload: entries,

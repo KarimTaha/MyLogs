@@ -11,6 +11,9 @@ const styles = StyleSheet.create({
     marginRight: 30,
     marginTop: 25,
   },
+  container: {
+    height: '100%',
+  },
   entryItemRow: {
     flexDirection: 'row',
     padding: 5,
@@ -42,6 +45,7 @@ const styles = StyleSheet.create({
   },
   tabContainer: {
     padding: 20,
+    flex: 1,
   },
   titleContainer: {
     flexDirection: 'row',
