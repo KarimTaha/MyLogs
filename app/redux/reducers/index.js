@@ -4,5 +4,5 @@ import logEntriesReducer from './logEntriesReducer';
 
 export default combineReducers({
   logs: logsReducer,
-  // logEntries: logEntriesReducer,
+  logEntries: logEntriesReducer,
 });

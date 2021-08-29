@@ -101,13 +101,13 @@ async function deleteLog(log) {
 
 // Log entries
 // Get an array of all the log entries in the database
-async function getLogEntries() {
+async function getLogEntries(log_id) {
   console.log('[db] Fetching log entries from the db...');
   return getDatabase()
     .then(db =>
       // Get all the log entries, ordered by newest log entries first
       db.executeSql(
-        'SELECT entry_id as id, value, creation_date FROM LogEntry ORDER BY id DESC;',
+        'SELECT entry_id as id, value, creation_date FROM LogEntry WHERE log_id = ? ORDER BY id DESC;', [log_id]
       ),
     )
     .then(([results]) => {
@@ -123,8 +123,9 @@ async function getLogEntries() {
         console.log(`[db] Log entry id: ${id}`);
         entries.push({
           id,
-          balue,
+          value,
           creation_date,
+          log_id,
         });
       }
       return entries;

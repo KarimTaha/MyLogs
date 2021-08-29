@@ -87,7 +87,6 @@ const RightSwipe = ({item}) => {
 const HomeScreen = ({navigation}) => {
   const logs = useSelector(state => state.logs);
   const dispatch = useDispatch();
-  const swipeableRef = useRef();
 
   useEffect(() => {
     dispatch(getLogs());
