@@ -42,3 +42,18 @@ export const LOG_COLORS = [
   {label: 'Blue', value: '002aff'},
   {label: 'Navy', value: '000a3b'},
 ];
+
+export const LOG_DETAILS_TABS = [
+  {
+    id: '1',
+    name: 'Details',
+  },
+  {
+    id: '2',
+    name: 'Entries',
+  },
+  {
+    id: '3',
+    name: 'Graph',
+  },
+];

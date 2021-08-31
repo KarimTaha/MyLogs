@@ -30,6 +30,33 @@ const styles = StyleSheet.create({
   labelValueText: {
     fontSize: 16,
   },
+  modalBody: {
+    backgroundColor: 'white',
+    padding: 35,
+    minWidth: 300,
+    alignItems: 'center',
+    elevation: 5,
+    flexDirection: 'column',
+  },
+  modalButtonsRow: {
+    flexDirection: 'row',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalInputValue: {
+    width: '80%',
+  },
+  modalTitle: {
+    fontSize: 18,
+  },
+  modalValueRow: {
+    flexDirection: 'row',
+    marginVertical: 30,
+  },
   pageTitle: {
     fontSize: 35,
     fontWeight: 'bold',
@@ -41,7 +68,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 47,
     justifyContent: 'center',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   tabContainer: {
     padding: 20,

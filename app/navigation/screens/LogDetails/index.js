@@ -1,7 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, FlatList, TouchableWithoutFeedback} from 'react-native';
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableWithoutFeedback,
+  Modal,
+} from 'react-native';
 import styles from './styles';
-import {Appbar, Button, Divider} from 'react-native-paper';
+import {Appbar, Button, Divider, TextInput} from 'react-native-paper';
 import RoundedTabs from 'mylogs/app/components/RoundedTabs';
 import {useSelector, useDispatch} from 'react-redux';
 import {
@@ -12,27 +18,16 @@ import {
 } from 'mylogs/app/redux/actions/logEntriesActions';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
-
-const buttonDataArray = [
-  {
-    id: '1',
-    name: 'Details',
-  },
-  {
-    id: '2',
-    name: 'Entries',
-  },
-  {
-    id: '3',
-    name: 'Graph',
-  },
-];
+import {capitalizeFirstLetter, splitPascalCase} from 'mylogs/app/utils/common';
+import {LOG_DETAILS_TABS} from 'mylogs/app/constants';
 
 const LogDetails = ({navigation, route}) => {
   const log = route.params.item;
   const logEntries = useSelector(state => state.logEntries);
   const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState(1);
+  const [entryModalVisible, setEntryModalVisible] = useState(false);
+
   const handleTabChange = newValue => {
     setSelectedTab(newValue);
   };
@@ -41,6 +36,9 @@ const LogDetails = ({navigation, route}) => {
     dispatch(getLogEntries(log.id));
     console.log('---------------------------logEntries', logEntries);
   }, []);
+
+  const showEntryModal = () => setEntryModalVisible(true);
+  const hideEntryModal = () => setEntryModalVisible(false);
 
   const renderLogEntryItem = ({item, index}) => {
     return (
@@ -74,27 +72,72 @@ const LogDetails = ({navigation, route}) => {
       <View style={styles.tabContainer}>
         <LabelValueItem label="Name" value={log.name} />
         <LabelValueItem label="Description" value={log.description} />
-        <LabelValueItem label="Type" value={log.type} />
+        <LabelValueItem label="Type" value={splitPascalCase(capitalizeFirstLetter(log.type))} />
         <LabelValueItem label="Creation Date" value={log.creation_date} />
         <LabelValueItem label="Reminder" value={log.reminder} />
       </View>
     );
   };
   const EntriesTab = () => {
+    const [newEntryValue, setNewEntryValue] = useState(0);
     return (
       <View style={styles.tabContainer}>
+        <Modal
+          transparent={true}
+          visible={entryModalVisible}
+          onRequestClose={() => {
+            setEntryModalVisible(false);
+          }}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalBody}>
+              <Text style={styles.modalTitle}>Add Entry</Text>
+              <View style={styles.modalValueRow}>
+                <TextInput
+                  keyboardType="numeric"
+                  style={styles.modalInputValue}
+                  label="Value"
+                  mode="contained"
+                  placeholder="Enter value"
+                  value={newEntryValue}
+                  onChangeText={value => setNewEntryValue(value)}
+                />
+              </View>
+              <View style={styles.modalButtonsRow}>
+                <Button
+                  color="#000000"
+                  mode="text"
+                  onPress={() => {
+                    hideEntryModal();
+                  }}>
+                  Cancel
+                </Button>
+                <Button
+                  color="#000000"
+                  style={styles.addEntryBtn}
+                  mode="contained"
+                  onPress={() => {
+                    dispatch(
+                      createLogEntry({
+                        log_id: log.id,
+                        value: newEntryValue,
+                        creation_date: moment.now(),
+                      }),
+                    );
+                    hideEntryModal();
+                  }}>
+                  Add
+                </Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+
         <Button
           color="#000000"
           style={styles.addEntryBtn}
           mode="text"
           onPress={() => {
-            dispatch(
-              createLogEntry({
-                log_id: log.id,
-                value: 100,
-                creation_date: moment.now(),
-              }),
-            );
+            showEntryModal();
           }}>
           Add
         </Button>
@@ -136,7 +179,7 @@ const LogDetails = ({navigation, route}) => {
       </View>
       <View style={styles.tabButtonsContainer}>
         <RoundedTabs
-          data={buttonDataArray}
+          data={LOG_DETAILS_TABS}
           selected={selectedTab}
           onChangeTab={handleTabChange}
           color={log.color}
@@ -162,7 +205,4 @@ const LabelValueItem = ({label, value}) => {
   );
 };
 
-const EntryItem = ({entry}) => {
-  return <View></View>;
-};
 export default LogDetails;
