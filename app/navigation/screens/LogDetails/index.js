@@ -23,70 +23,92 @@ import {LOG_DETAILS_TABS} from 'mylogs/app/constants';
 
 const LogDetails = ({navigation, route}) => {
   const log = route.params.item;
-  const logEntries = useSelector(state => state.logEntries);
   const dispatch = useDispatch();
   const [selectedTab, setSelectedTab] = useState(1);
-  const [entryModalVisible, setEntryModalVisible] = useState(false);
 
   const handleTabChange = newValue => {
     setSelectedTab(newValue);
   };
 
-  useEffect(() => {
-    dispatch(getLogEntries(log.id));
-    console.log('---------------------------logEntries', logEntries);
-  }, []);
-
-  const showEntryModal = () => setEntryModalVisible(true);
-  const hideEntryModal = () => setEntryModalVisible(false);
-
-  const renderLogEntryItem = ({item, index}) => {
-    return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          console.log('Hiiii');
-        }}
-        onLongPress={() => {
-          dispatch(deleteLogEntry(item));
-        }}>
-        <View>
-          <View style={styles.entryItemRow}>
-            <Icon name="calendar-times-o" style={styles.icon} />
-            <Text>
-              {moment(Number.parseInt(item.creation_date)).format(
-                'DD-MM-YYYY hh:mm a',
-              )}
-            </Text>
-          </View>
-          <View style={styles.entryItemRow}>
-            <Icon name="chevron-right" style={styles.icon} />
-            <Text>{item.value}</Text>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    );
-  };
-
   const DetailsTab = ({log}) => {
+    const LabelValueItem = ({label, value}) => {
+      return (
+        <View style={styles.labelValueRow}>
+          <Text style={styles.labelValueText}>{label}</Text>
+          <Text style={styles.labelValueText}>{value}</Text>
+        </View>
+      );
+    };
     return (
       <View style={styles.tabContainer}>
         <LabelValueItem label="Name" value={log.name} />
         <LabelValueItem label="Description" value={log.description} />
-        <LabelValueItem label="Type" value={splitPascalCase(capitalizeFirstLetter(log.type))} />
+        <LabelValueItem
+          label="Type"
+          value={splitPascalCase(capitalizeFirstLetter(log.type))}
+        />
         <LabelValueItem label="Creation Date" value={log.creation_date} />
         <LabelValueItem label="Reminder" value={log.reminder} />
       </View>
     );
   };
+
   const EntriesTab = () => {
-    const [newEntryValue, setNewEntryValue] = useState(0);
-    return (
-      <View style={styles.tabContainer}>
+    const logEntries = useSelector(state => state.logEntries);
+    const [addEntryModalVisible, setAddEntryModalVisible] = useState(false);
+    const [editEntryModalVisible, setEditEntryModalVisible] = useState(false);
+    const [editEntryItem, setEditEntryItem] = useState({});
+    console.log('_____________--editEntryItem', editEntryItem);
+
+    useEffect(() => {
+      dispatch(getLogEntries(log.id));
+      console.log('---------------------------logEntries', logEntries);
+    }, []);
+
+    const showAddEntryModal = () => setAddEntryModalVisible(true);
+    const hideAddEntryModal = () => setAddEntryModalVisible(false);
+
+    const showEditEntryModal = () => setEditEntryModalVisible(true);
+    const hideEditEntryModal = () => setEditEntryModalVisible(false);
+
+    const renderLogEntryItem = ({item, index}) => {
+      return (
+        <TouchableWithoutFeedback
+          onPress={() => {
+            // console.log('Setting edit entry value to ', item);
+            setEditEntryItem(item);
+            showEditEntryModal();
+          }}
+          onLongPress={() => {
+            dispatch(deleteLogEntry(item));
+          }}>
+          <View>
+            <View style={styles.entryItemRow}>
+              <Icon name="calendar-times-o" style={styles.icon} />
+              <Text>
+                {moment(Number.parseInt(item.creation_date)).format(
+                  'DD-MM-YYYY hh:mm a',
+                )}
+              </Text>
+            </View>
+            <View style={styles.entryItemRow}>
+              <Icon name="chevron-right" style={styles.icon} />
+              <Text>{item.value}</Text>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      );
+    };
+
+    const AddEntryModal = () => {
+      const [newEntryValue, setNewEntryValue] = useState('');
+      console.log('AddEntryModal ---');
+      return (
         <Modal
           transparent={true}
-          visible={entryModalVisible}
+          visible={addEntryModalVisible}
           onRequestClose={() => {
-            setEntryModalVisible(false);
+            setAddEntryModalVisible(false);
           }}>
           <View style={styles.modalContainer}>
             <View style={styles.modalBody}>
@@ -107,7 +129,7 @@ const LogDetails = ({navigation, route}) => {
                   color="#000000"
                   mode="text"
                   onPress={() => {
-                    hideEntryModal();
+                    hideAddEntryModal();
                   }}>
                   Cancel
                 </Button>
@@ -123,7 +145,7 @@ const LogDetails = ({navigation, route}) => {
                         creation_date: moment.now(),
                       }),
                     );
-                    hideEntryModal();
+                    hideAddEntryModal();
                   }}>
                   Add
                 </Button>
@@ -131,13 +153,71 @@ const LogDetails = ({navigation, route}) => {
             </View>
           </View>
         </Modal>
+      );
+    };
 
+    const EditEntryModal = () => {
+      const [editedEntryItem, setEditedEntryItem] = useState(editEntryItem);
+      console.log('EditEntryModal editEntryItem = ', editEntryItem.value);
+      return (
+        <Modal
+          transparent={true}
+          visible={editEntryModalVisible}
+          onRequestClose={() => {
+            setEditEntryModalVisible(false);
+          }}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalBody}>
+              <Text style={styles.modalTitle}>Edit Entry</Text>
+              <View style={styles.modalValueRow}>
+                <TextInput
+                  keyboardType="numeric"
+                  style={styles.modalInputValue}
+                  label="Value"
+                  mode="contained"
+                  placeholder="Enter value"
+                  value={editedEntryItem.value + ''}
+                  onChangeText={value =>
+                    setEditedEntryItem({...editedEntryItem, value: value})
+                  }
+                />
+              </View>
+              <View style={styles.modalButtonsRow}>
+                <Button
+                  color="#000000"
+                  mode="text"
+                  onPress={() => {
+                    hideEditEntryModal();
+                  }}>
+                  Cancel
+                </Button>
+                <Button
+                  color="#000000"
+                  style={styles.addEntryBtn}
+                  mode="contained"
+                  onPress={() => {
+                    dispatch(editLogEntry(editedEntryItem));
+                    hideEditEntryModal();
+                  }}>
+                  Save
+                </Button>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      );
+    };
+
+    return (
+      <View style={styles.tabContainer}>
+        <AddEntryModal />
+        <EditEntryModal />
         <Button
           color="#000000"
           style={styles.addEntryBtn}
           mode="text"
           onPress={() => {
-            showEntryModal();
+            showAddEntryModal();
           }}>
           Add
         </Button>
@@ -154,6 +234,7 @@ const LogDetails = ({navigation, route}) => {
       </View>
     );
   };
+
   const GraphTab = () => {
     return (
       <View style={styles.tabContainer}>
@@ -192,15 +273,6 @@ const LogDetails = ({navigation, route}) => {
       ) : (
         <GraphTab />
       )}
-    </View>
-  );
-};
-
-const LabelValueItem = ({label, value}) => {
-  return (
-    <View style={styles.labelValueRow}>
-      <Text style={styles.labelValueText}>{label}</Text>
-      <Text style={styles.labelValueText}>{value}</Text>
     </View>
   );
 };

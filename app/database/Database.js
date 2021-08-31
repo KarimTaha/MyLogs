@@ -162,7 +162,10 @@ async function editLogEntry(logEntry) {
       ]),
     )
     .then(([results]) => {
-      console.log(`[db] Updated log entry with Id: ${log.id}`);
+      console.log(`[db] Updated log entry with Id: ${logEntry.id}`);
+    })
+    .catch(error => {
+      console.log('[db] Error editing entry', error);
     });
 }
 
