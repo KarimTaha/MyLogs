@@ -107,7 +107,7 @@ async function getLogEntries(log_id) {
     .then(db =>
       // Get all the log entries, ordered by newest log entries first
       db.executeSql(
-        'SELECT entry_id as id, value, creation_date FROM LogEntry WHERE log_id = ? ORDER BY id DESC;', [log_id]
+        'SELECT entry_id as id, value, value_date, creation_date FROM LogEntry WHERE log_id = ? ORDER BY id DESC;', [log_id]
       ),
     )
     .then(([results]) => {
@@ -119,11 +119,12 @@ async function getLogEntries(log_id) {
       const entries = [];
       for (let i = 0; i < count; i++) {
         const row = results.rows.item(i);
-        const {id, value, creation_date} = row;
+        const {id, value, value_date, creation_date} = row;
         console.log(`[db] Log entry id: ${id}`);
         entries.push({
           id,
           value,
+          value_date,
           creation_date,
           log_id,
         });
@@ -140,8 +141,8 @@ async function createLogEntry(newLogEntry) {
   return getDatabase()
     .then(db =>
       db.executeSql(
-        'INSERT INTO LogEntry (log_id, value, creation_date) VALUES (?, ?, ?);',
-        [newLogEntry.log_id, newLogEntry.value, newLogEntry.creation_date],
+        'INSERT INTO LogEntry (log_id, value, creation_date, value_date) VALUES (?, ?, ?, ?);',
+        [newLogEntry.log_id, newLogEntry.value, newLogEntry.creation_date, newLogEntry.value_date],
       ),
     )
     .then(([results]) => {
@@ -149,6 +150,9 @@ async function createLogEntry(newLogEntry) {
       console.log(
         `[db] Added log entry with log Id: "${newLogEntry.log_id}"! InsertId: ${insertId}`,
       );
+    })
+    .catch(error => {
+      console.log('[db] Error creating entry', error);
     });
 }
 
@@ -156,8 +160,9 @@ async function createLogEntry(newLogEntry) {
 async function editLogEntry(logEntry) {
   return getDatabase()
     .then(db =>
-      db.executeSql('UPDATE LogEntry SET value = ? WHERE entry_id = ?;', [
+      db.executeSql('UPDATE LogEntry SET value = ? , value_date = ? WHERE entry_id = ?;', [
         logEntry.value,
+        logEntry.value_date,
         logEntry.id,
       ]),
     )

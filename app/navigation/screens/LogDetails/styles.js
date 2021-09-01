@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     fontSize: 18,
+    marginBottom: 10,
   },
   modalValueRow: {
     flexDirection: 'row',

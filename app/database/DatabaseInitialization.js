@@ -75,6 +75,7 @@ export const createTables = transaction => {
         entry_id INTEGER PRIMARY KEY NOT NULL,
         log_id INTEGER,
         value REAL,
+        value_date TEXT,
         creation_date TEXT,
         FOREIGN KEY ( log_id ) REFERENCES Log ( log_id )
       );
