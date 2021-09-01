@@ -21,6 +21,7 @@ import moment from 'moment';
 import {capitalizeFirstLetter, splitPascalCase} from 'mylogs/app/utils/common';
 import {LOG_DETAILS_TABS} from 'mylogs/app/constants';
 import DatePicker from 'react-native-date-picker';
+import LogChart from 'mylogs/app/components/LogChart';
 
 const LogDetails = ({navigation, route}) => {
   const log = route.params.item;
@@ -250,7 +251,7 @@ const LogDetails = ({navigation, route}) => {
   const GraphTab = () => {
     return (
       <View style={styles.tabContainer}>
-        <Text>Graph Tab</Text>
+        <LogChart log={log}/>
       </View>
     );
   };
