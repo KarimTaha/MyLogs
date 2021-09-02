@@ -19,6 +19,9 @@ const CreateLog = ({navigation}) => {
   const [logTypeValue, setLogTypeValue] = useState(null);
   const [logTypeItems, setLogTypeItems] = useState(LOG_TYPES);
 
+  const [logNameValid, setLogNameValid] = useState(true);
+  const [logTypeValid, setLogTypeValid] = useState(true);
+
   const dispatch = useDispatch();
 
   return (
@@ -34,12 +37,16 @@ const CreateLog = ({navigation}) => {
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <View>
           <TextInput
+            error={!logNameValid}
             style={styles.inputItem}
             label="Name"
             mode="outlined"
             placeholder="Enter log name"
             value={logName}
-            onChangeText={text => setLogName(text)}></TextInput>
+            onChangeText={text => {
+              setLogNameValid(text.length > 0);
+              setLogName(text);
+            }}></TextInput>
           <TextInput
             style={styles.inputItem}
             label="Description"
@@ -48,9 +55,16 @@ const CreateLog = ({navigation}) => {
             value={logDescription}
             onChangeText={text => setLogDescription(text)}></TextInput>
           <DropDownPicker
+            onChangeValue={value => {
+              if (value) setLogTypeValid(true);
+            }}
             textStyle={styles.typeDropdownText}
             placeholder="Select log type"
-            style={[styles.inputItem, styles.typeDropdown]}
+            style={[
+              styles.inputItem,
+              styles.typeDropdown,
+              logTypeValid ? null : {borderColor: '#b00000', borderWidth: 2},
+            ]}
             open={logTypeOpen}
             value={logTypeValue}
             items={logTypeItems}
@@ -66,8 +80,16 @@ const CreateLog = ({navigation}) => {
             mode="contained"
             style={styles.button}
             onPress={() => {
-              // console.log(`name = ${logName},
-              // description = ${logDescription}`)
+              let error = false;
+              if (!logTypeValue) {
+                setLogTypeValid(false);
+                error = true;
+              }
+              if (!logName) {
+                setLogNameValid(false);
+                error = true;
+              }
+              if (error === true) return;
               dispatch(
                 createLog({
                   name: logName,

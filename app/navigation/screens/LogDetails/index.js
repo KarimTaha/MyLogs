@@ -114,6 +114,8 @@ const LogDetails = ({navigation, route}) => {
     const AddEntryModal = () => {
       const [newEntryValue, setNewEntryValue] = useState('');
       const [newEntryDate, setNewEntryDate] = useState(new Date());
+      const [newEntryValueValid, setNewEntryValueValid] = useState(true);
+
       return (
         <Modal
           transparent={true}
@@ -127,13 +129,17 @@ const LogDetails = ({navigation, route}) => {
               <DatePicker date={newEntryDate} onDateChange={setNewEntryDate} />
               <View style={styles.modalValueRow}>
                 <TextInput
+                  error={!newEntryValueValid}
                   keyboardType="numeric"
                   style={styles.modalInputValue}
                   label="Value"
                   mode="contained"
                   placeholder="Enter value"
                   value={newEntryValue}
-                  onChangeText={value => setNewEntryValue(value)}
+                  onChangeText={value => {
+                    setNewEntryValueValid(value.length > 0);
+                    setNewEntryValue(value);
+                  }}
                 />
               </View>
               <View style={styles.modalButtonsRow}>
@@ -150,15 +156,17 @@ const LogDetails = ({navigation, route}) => {
                   style={styles.addEntryBtn}
                   mode="contained"
                   onPress={() => {
-                    dispatch(
-                      createLogEntry({
-                        log_id: log.id,
-                        value: newEntryValue,
-                        value_date: moment(newEntryDate).valueOf(),
-                        creation_date: moment.now(),
-                      }),
-                    );
-                    hideAddEntryModal();
+                    if (newEntryValue) {
+                      dispatch(
+                        createLogEntry({
+                          log_id: log.id,
+                          value: newEntryValue,
+                          value_date: moment(newEntryDate).valueOf(),
+                          creation_date: moment.now(),
+                        }),
+                      );
+                      hideAddEntryModal();
+                    } else setNewEntryValueValid(false);
                   }}>
                   Add
                 </Button>
@@ -175,6 +183,8 @@ const LogDetails = ({navigation, route}) => {
         moment(Number.parseInt(editedEntryItem.value_date)).toISOString(),
       );
       const [editedEntryDate, setEditedEntryDate] = useState(valueDate);
+      const [editedEntryValueValid, setEditedEntryValueValid] = useState(true);
+
       return (
         <Modal
           transparent={true}
@@ -191,15 +201,17 @@ const LogDetails = ({navigation, route}) => {
               />
               <View style={styles.modalValueRow}>
                 <TextInput
+                  error={!editedEntryValueValid}
                   keyboardType="numeric"
                   style={styles.modalInputValue}
                   label="Value"
                   mode="contained"
                   placeholder="Enter value"
                   value={editedEntryItem.value + ''}
-                  onChangeText={value =>
-                    setEditedEntryItem({...editedEntryItem, value: value})
-                  }
+                  onChangeText={value => {
+                    setEditedEntryValueValid(value.length > 0);
+                    setEditedEntryItem({...editedEntryItem, value: value});
+                  }}
                 />
               </View>
               <View style={styles.modalButtonsRow}>
@@ -216,13 +228,15 @@ const LogDetails = ({navigation, route}) => {
                   style={styles.addEntryBtn}
                   mode="contained"
                   onPress={() => {
-                    dispatch(
-                      editLogEntry({
-                        ...editedEntryItem,
-                        value_date: moment(editedEntryDate).valueOf(),
-                      }),
-                    );
-                    hideEditEntryModal();
+                    if (editedEntryValueValid) {
+                      dispatch(
+                        editLogEntry({
+                          ...editedEntryItem,
+                          value_date: moment(editedEntryDate).valueOf(),
+                        }),
+                      );
+                      hideEditEntryModal();
+                    }
                   }}>
                   Save
                 </Button>
