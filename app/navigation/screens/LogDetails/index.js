@@ -43,14 +43,26 @@ const LogDetails = ({navigation, route}) => {
     };
     return (
       <View style={styles.tabContainer}>
-        <LabelValueItem label="Name" value={log.name} />
-        <LabelValueItem label="Description" value={log.description} />
-        <LabelValueItem
-          label="Type"
-          value={splitPascalCase(capitalizeFirstLetter(log.type))}
-        />
-        <LabelValueItem label="Creation Date" value={log.creation_date} />
-        <LabelValueItem label="Reminder" value={log.reminder} />
+        <Text style={styles.detailsName}>{log.name}</Text>
+        {log.description.length > 0 ? (
+          <Text style={styles.detailsDescription}>{log.description}</Text>
+        ) : null}
+        <View style={styles.detailsRow}>
+          <Icon name="sliders" style={styles.icon} />
+          <Text>{splitPascalCase(capitalizeFirstLetter(log.type))}</Text>
+        </View>
+        <View style={styles.detailsRow}>
+          <Icon name="calendar" style={styles.icon} />
+          <Text>
+            {moment(Number.parseInt(log.creation_date)).format(
+              'DD-MM-YYYY hh:mm a',
+            )}
+          </Text>
+        </View>
+        <View style={styles.detailsRow}>
+          <Icon name="bell" style={styles.icon} />
+          <Text>{log.reminder}</Text>
+        </View>
       </View>
     );
   };
@@ -251,7 +263,7 @@ const LogDetails = ({navigation, route}) => {
   const GraphTab = () => {
     return (
       <View style={styles.tabContainer}>
-        <LogChart log={log}/>
+        <LogChart log={log} />
       </View>
     );
   };

@@ -7,6 +7,7 @@ import {LOG_TYPES} from 'mylogs/app/constants';
 import {useDispatch} from 'react-redux';
 import ColorPalette from 'mylogs/app/components/ColorPalette';
 import {createLog} from 'mylogs/app/redux/actions/logsActions';
+import moment from 'moment';
 
 const CreateLog = ({navigation}) => {
   DropDownPicker.setListMode('SCROLLVIEW');
@@ -74,9 +75,7 @@ const CreateLog = ({navigation}) => {
                   color: logcolor,
                   type: logTypeValue,
                   reminder: 'Daily',
-                  creation_date: new Date(Date.now()).toLocaleString('en-EG', {
-                    timeZone: 'CAT',
-                  }),
+                  creation_date: moment.now(),
                 }),
               ).then(() => {
                 navigation.goBack();

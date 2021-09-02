@@ -14,6 +14,17 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
   },
+  detailsDescription: {
+    color: 'grey',
+  },
+  detailsName: {
+    fontSize: 18,
+    marginBottom: 5,
+  },
+  detailsRow: {
+    flexDirection: 'row',
+    paddingVertical: 10,
+  },
   entryItemRow: {
     flexDirection: 'row',
     padding: 5,
